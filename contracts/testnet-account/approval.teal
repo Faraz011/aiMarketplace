@@ -1,0 +1,93 @@
+#pragma version 6
+txn ApplicationID
+int 0
+==
+bnz main_l8
+txna ApplicationArgs 0
+byte "register_task"
+==
+bnz main_l7
+txna ApplicationArgs 0
+byte "set_payment"
+==
+bnz main_l6
+txna ApplicationArgs 0
+byte "approve_and_release"
+==
+bnz main_l5
+err
+main_l5:
+txn Sender
+byte "creator"
+app_global_get
+==
+assert
+byte "verified"
+app_global_get
+int 0
+==
+assert
+byte "amount"
+app_global_get
+int 0
+>
+assert
+byte "verified"
+int 1
+app_global_put
+itxn_begin
+int pay
+itxn_field TypeEnum
+byte "amount"
+app_global_get
+itxn_field Amount
+byte "agent"
+app_global_get
+itxn_field Receiver
+itxn_submit
+int 1
+return
+main_l6:
+txn Sender
+byte "creator"
+app_global_get
+==
+assert
+txn NumAppArgs
+int 2
+>=
+assert
+byte "amount"
+txna ApplicationArgs 1
+btoi
+app_global_put
+int 1
+return
+main_l7:
+txn NumAppArgs
+int 2
+>=
+assert
+byte "result_hash"
+txna ApplicationArgs 1
+app_global_put
+byte "agent"
+txn Sender
+app_global_put
+byte "verified"
+int 0
+app_global_put
+int 1
+return
+main_l8:
+byte "creator"
+txn Sender
+app_global_put
+byte "amount"
+int 0
+app_global_put
+byte "verified"
+int 0
+app_global_put
+int 1
+return
