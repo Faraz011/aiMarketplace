@@ -1,7 +1,0 @@
-{
-  "name": "activity_agent",
-  "description": "Searches activities in a location and manages reservations.",
-  "keywords": ["activity", "booking", "reservation", "travel"],
-  "entrypoint": "agent.py",
-  "function": "handle_task"
-}
